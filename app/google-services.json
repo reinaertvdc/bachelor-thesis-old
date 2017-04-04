@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "610189267602",
+    "firebase_url": "https://bachelorthesis-caec1.firebaseio.com",
+    "project_id": "bachelorthesis-caec1",
+    "storage_bucket": "bachelorthesis-caec1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:610189267602:android:4ca6d346857a7df3",
+        "android_client_info": {
+          "package_name": "me.reinaertvandecruys.bachelorthesis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "610189267602-jd6egk4i7cg4os7m184km3cs2n83ro9a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.reinaertvandecruys.bachelorthesis",
+            "certificate_hash": "a534cfdadaa13ad5f638531095ac639e0a65800a"
+          }
+        },
+        {
+          "client_id": "610189267602-jq8m3hju6gumf28nk8ss15l6ikka77ku.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7tJmwEQeAbqVku2eWqFfZqGHtJFnOGoI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "610189267602-jq8m3hju6gumf28nk8ss15l6ikka77ku.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

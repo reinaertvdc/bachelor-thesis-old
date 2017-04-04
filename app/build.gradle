@@ -47,3 +47,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':openCVLibrary320')
 }
+
+apply plugin: 'com.google.gms.google-services'
