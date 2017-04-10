@@ -25,6 +25,7 @@ public class MainActivity extends Activity
     private static final int PERMISSION_CAMERA_REQUEST_ID = 0;
 
     private JavaCameraView mCameraView;
+    private FrameProcessor mFrameProcessor;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -32,7 +33,6 @@ public class MainActivity extends Activity
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                     if (mCameraView != null) {
-                        System.loadLibrary("native-lib");
                         mCameraView.enableView();
                     }
                     break;
@@ -44,11 +44,7 @@ public class MainActivity extends Activity
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        Mat frame = inputFrame.rgba();
-
-        process(frame.getNativeObjAddr(), inputFrame.gray().getNativeObjAddr());
-
-        return frame;
+        return mFrameProcessor.process(inputFrame);
     }
 
     @Override
@@ -103,6 +99,8 @@ public class MainActivity extends Activity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
 
+        mFrameProcessor = new FrameProcessor();
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
                 PackageManager.PERMISSION_GRANTED) {
             setUpCameraView();
@@ -121,6 +119,13 @@ public class MainActivity extends Activity
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mFrameProcessor.release();
+    }
+
     private void initOpenCV() {
         if (!OpenCVLoader.initDebug()) {
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0, this, mLoaderCallback);
@@ -128,8 +133,6 @@ public class MainActivity extends Activity
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
-
-    private native void process(long frameAddr, long grayAddr);
 
     private void setUpCameraView() {
         mCameraView = (JavaCameraView) findViewById(R.id.javaCameraView);
