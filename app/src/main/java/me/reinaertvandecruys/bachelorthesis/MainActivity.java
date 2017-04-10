@@ -14,7 +14,6 @@ import android.view.WindowManager;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
@@ -24,7 +23,7 @@ public class MainActivity extends Activity
 
     private static final int PERMISSION_CAMERA_REQUEST_ID = 0;
 
-    private JavaCameraView mCameraView;
+    private CustomJavaCameraView mCameraView;
     private FrameProcessor mFrameProcessor;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -49,6 +48,9 @@ public class MainActivity extends Activity
 
     @Override
     public void onCameraViewStarted(int width, int height) {
+        mCameraView.setResolutionToHighestSupported();
+        mCameraView.setFpsRangeToHighestSupported();
+
         mCameraView.enableFpsMeter();
     }
 
@@ -111,19 +113,19 @@ public class MainActivity extends Activity
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mFrameProcessor.release();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
 
         if (mCameraView != null) {
             mCameraView.disableView();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        mFrameProcessor.release();
     }
 
     private void initOpenCV() {
@@ -135,7 +137,7 @@ public class MainActivity extends Activity
     }
 
     private void setUpCameraView() {
-        mCameraView = (JavaCameraView) findViewById(R.id.javaCameraView);
+        mCameraView = (CustomJavaCameraView) findViewById(R.id.javaCameraView);
         mCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         mCameraView.setCvCameraViewListener(this);
     }
