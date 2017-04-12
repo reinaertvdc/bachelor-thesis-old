@@ -4,12 +4,11 @@ void FrameProcessor::process(cv::Mat &frame, cv::Mat &gray) {
     std::vector<std::vector<cv::Point> > contours;
     std::vector<cv::Vec4i> hierarchy;
 
-    cv::threshold(gray, gray, 40, 255, cv::THRESH_BINARY);
+    cv::threshold(gray, gray, THRESHOLD, THRESHOLD_MAX, cv::THRESH_BINARY);
 
     findContours(gray, contours, hierarchy, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
 
     for (int i = 0; i < contours.size(); i++) {
-
         double contourLength = cv::arcLength(contours[i], true);
 
         if (contourLength < MIN_ARC_LENGTH || contourLength > MAX_ARC_LENGTH) {
@@ -24,6 +23,6 @@ void FrameProcessor::process(cv::Mat &frame, cv::Mat &gray) {
             continue;
         }
 
-        cv::drawContours(frame, contours, i, COLOR, 2, 8, hierarchy, 0);
+        cv::polylines(frame, contourApproximation, true, COLOR);
     }
 }

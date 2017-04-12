@@ -11,6 +11,9 @@ public:
     void process(cv::Mat &frame, cv::Mat &gray);
 
 private:
+    const int THRESHOLD = 40;
+    const int THRESHOLD_MAX = 255;
+
     const cv::Scalar COLOR = cv::Scalar(255, 0, 0);
 
     const int MIN_ARC_LENGTH = 400;

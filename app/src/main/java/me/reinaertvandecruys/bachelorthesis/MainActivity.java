@@ -20,7 +20,6 @@ import org.opencv.core.Mat;
 
 public class MainActivity extends Activity
         implements CameraBridgeViewBase.CvCameraViewListener2 {
-
     private static final int PERMISSION_CAMERA_REQUEST_ID = 0;
 
     private CustomJavaCameraView mCameraView;
@@ -66,15 +65,17 @@ public class MainActivity extends Activity
                 setUpCameraView();
             }
         }
-
-        initOpenCV();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        initOpenCV();
+        if (!OpenCVLoader.initDebug()) {
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0, this, mLoaderCallback);
+        } else {
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
     }
 
     @SuppressLint("InlinedApi")
@@ -125,14 +126,6 @@ public class MainActivity extends Activity
 
         if (mCameraView != null) {
             mCameraView.disableView();
-        }
-    }
-
-    private void initOpenCV() {
-        if (!OpenCVLoader.initDebug()) {
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0, this, mLoaderCallback);
-        } else {
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
 
