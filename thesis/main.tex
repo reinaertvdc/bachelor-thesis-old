@@ -8,20 +8,20 @@
 
 \begin{document}
 
-\section{Feedforward} \label{section_background}
-Feedforward is a relatively new concept that has been the subject of much confusion, and thus it is worth clarifying. Feedforward was first defined by \citeauthor{djajadiningrat2002but} in \citeyear{djajadiningrat2002but} as 
-
-
-Feedforward is:
-	communication of the purpose of an action. \cite{djajadiningrat2002but}
-
-	informs the user about what the result of his action will be. Inviting the appropriate action is a prerequisite for feedforward but it is not sufficient. The product also needs to communicate what the user can expect. \cite{djajadiningrat2002but}
-
-	a HCI design technique that aims at making explicit the action that is required to perform an interaction and its effect. \cite{chueke2016perceptible}
-	
-	intelligibility information that is provided before an event takes place. \cite{vermeulen2013intelligibility}
-	
-	communicating what will be the result of an action
+%\section{Feedforward} \label{section_background}
+%Feedforward is a relatively new concept that has been the subject of much confusion, and thus it is worth clarifying. Feedforward was first defined by \citeauthor{djajadiningrat2002but} in \citeyear{djajadiningrat2002but} as 
+%
+%
+%Feedforward is:
+%	communication of the purpose of an action. \cite{djajadiningrat2002but}
+%
+%	informs the user about what the result of his action will be. Inviting the appropriate action is a prerequisite for feedforward but it is not sufficient. The product also needs to communicate what the user can expect. \cite{djajadiningrat2002but}
+%
+%	a HCI design technique that aims at making explicit the action that is required to perform an interaction and its effect. \cite{chueke2016perceptible}
+%	
+%	intelligibility information that is provided before an event takes place. \cite{vermeulen2013intelligibility}
+%	
+%	communicating what will be the result of an action
 
 
 %Feedforward hasn't always been clearly defined. People don't know it exists, confuse it with other concepts (like affordances) or use different names for it (signifiers). Let's now define what feedforward is, according to different definitions.
@@ -44,34 +44,74 @@ Feedforward is:
 %
 %Preview important in the real world because it is often not possible to undo an action. \cite{rekimoto2003presense}
 
-\section{Related Work} \label{section_related_work}
-Since feedforward, AR and ubicomp are all recent topics of research, literature combining the three is still scarce (but it does exist \cite{park2014previewable, vermeulen2009bet}). However, there is a moderate set of works that combine at least two of the topics, or that bring forth some relevant technique. The discussion of these works is divided up into some general categories, to more easily make connections and to limit repetition.
+\section{Related Work} \label{sec:related_work}
+Feedforward, AR and ubicomp are all recent topics of research, and literature combining the three is still scarce (but it does exist \cite{vermeulen2009bet}). However, there is a moderate set of works that combine at least two of the topics, or that bring forth some relevant technique. We divide the discussion of these works up into some general categories, to more easily make connections and to avoid repetition.
 
-\subsection{Gestures} \label{subsection_gestures}
-PreSense: interaction techniques for finger sensing input devices \cite{rekimoto2003presense}
+	\subsection{Gesture-based Commands} \label{subsec:gesture-based_commands}
+	OctoPocus explores the use of feedforward in on-screen gesture-based commands \cite{bau2008octopocus}. When the user initiates a command, for each possible gesture a labeled path radiates from the cursor, giving the user feedforward by telling them what will happen if they move the cursor in a particular way (Fig. \ref{fig:bau2008octopocus_demo}). The accompanying user study indicates that this approach allows for lower overhead in time than when using traditional help menus, that it is less error-prone, allows for ``in situ'' learning, and that it is generally preferred by users.
 
-OctoPocus explores the use of feedforward in on-screen gesture-based commands \cite{bau2008octopocus}. When the user initiates a command, for each possible gesture a labeled path radiates from the cursor, giving the user feedforward on what will happen if they move the cursor in a particular way. The accompanied user study indicates that this approach allows for lower overhead in time than when using traditional help menus, that it is less error-prone, allows for ``in situ'' learning, and that it is generally preferred by users.
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/bau2008octopocus/demo.png}
+		\caption{Demonstration of OctoPocus with three possible commands: tracing a gesture (\textit{copy} in this case) causes other gestures to get thinner (like \textit{cut}) and completely disappear when they become too distinct (like \textit{paste}) \cite{bau2008octopocus}}
+		\label{fig:bau2008octopocus_demo}
+	\end{figure}
 
-Enhanced feed-forward for a user aware multi-touch device \cite{freitag2012enhanced}
+	Shadow Tooltips are a feedforward concept for multi-touch devices \cite{freitag2012enhanced}. When a user's hand approaches the screen, labeled silhouettes of the hand appear around it, conveying the different possible actions the hand can take and their corresponding effect (Fig. \ref{fig:freitag2012enhanced_demo}). The accompanying user study did not measure performance or error rate, but rather the user's opinions. Shadow Tooltips scored very high on \textit{novelty}, high on \textit{appeal}, \textit{ease of use} and \textit{comprehensibility}, and moderate on \textit{relevance}, meaning the users enjoyed trying out the concept, but were divided on its applicability.
 
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/freitag2012enhanced/demo.png}
+		\caption{Example of Shadow Tooltips in the left hand can drag the map with one finger and zoom with two fingers, while each of the right hand fingers can be used for drawing \cite{freitag2012enhanced}}
+		\label{fig:freitag2012enhanced_demo}
+	\end{figure}
 
+	\subsection{AR Projectors} \label{subsec:ar_projectors}
+	\citeauthor{vermeulen2009bet} (\citeyear{vermeulen2009bet}) use a series of mounted projectors to visualize the present input/output devices in a room \cite{vermeulen2009bet}. Close to the physical location of each device, they project an icon that resembles it, making all devices clearly visible to the user. The different possible events that input devices can detect, are visualized by labels connected to the device's icon. From these events, new lines are drawn to the actions that they trigger, and these actions in turn have lines running to the output devices on which they occur (Fig. \ref{fig:vermeulen2009bet_mockup}, \ref{fig:vermeulen2009bet_demo}). This setup gives the user extensive feedforward, since it tells them the exact results of every possible action they can take. Moreover, the feedforward concerns an ubicomp environment and is given via AR, making this experiment of very high relevance to us. The accompanying user study however focused on the effects of real-time feedback, and thus its results are less of interest.
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/vermeulen2009bet/mockup.png}
+		\caption{The touchscreen can detect a \textit{click} event, which will cause a movie to start playing on the touchscreen and will cause the lights to dim \cite{vermeulen2009bet}}
+		\label{fig:vermeulen2009bet_mockup}
+	\end{figure}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/vermeulen2009bet/demo.png}
+		\caption{The user gets a clear view of which devices exist around them and how they are interconnected \cite{vermeulen2009bet}}
+		\label{fig:vermeulen2009bet_demo}
+	\end{figure}
+	
+	The Feedforward Torch is a hand-held mobile projector with a touchscreen, that can be aimed at legacy hardware interfaces to either project textual or graphical clarifications on them, or to show these clarifications on the on-board screen (Fig. \ref{fig:vermeulen2012understanding_demo}) \cite{vermeulen2012understanding}. In the accompanying small user study, the experiment received positive feedback, and the research team believes the technique to be valuable in helping users interact with systems that are complex or that suffer from design flaws.
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/vermeulen2012understanding/demo.png}
+		\caption{The user aims the Feedforward Torch at a set of unlabeled light switches to receive clarification \cite{vermeulen2012understanding}}
+		\label{fig:vermeulen2012understanding_demo}
+	\end{figure}
 
-%\subsection{AR Projectors and the Feedforward Torch} \label{subsection_ar_projectors_feedforward_torch}
-%Multiple studies have touched on the use of projectors to augment environments with feedforward information. We name two more recent ones, the first of which  is conducted by \citeauthor{vermeulen2009bet} \cite{vermeulen2009bet}. In this study, a series of static and steerable projectors display icons and labels on the walls of a room, representing the present input/output devices and their available actions, along with how to trigger them. Although this study draws no conclusions regarding feedforward (since only an informal first-use study was conducted that focused on the effects of real-time feedback), the concept certainly remains relevant to us. The second study concerns the Feedforward Torch, which is a hand-held mobile projector with a touchscreen, that can be aimed at legacy hardware interfaces to either project textual or graphical clarifications on them, or to show these clarifications on the on-board screen \cite{vermeulen2012understanding}. The accompanied small user study received positive feedback, and the research team indicated they believe the technique to be valuable in helping users interact with systems that are complex or suffer from design flaws.
-%
-%\subsection{AR Note-taking} \label{subsection_ar_note-taking}
-%\citeauthor{liu2011mobile} propose the use of mobile AR in note-taking \cite{liu2011mobile}. Looking through their PDA's, users can add annotations to the interfaces they aim at, which later serve as feedforward when the users try to retrace their steps. The research team conducts no user study, but does mention challenges and opportunities, where the one concerning us in particular is how to convey rich annotations as clearly and efficiently as possible.
-%
-%\subsection{Previewable Switch} \label{subsection_previewable_switch}
-%Another approach is explored through the Previewable Switch, which presents feedforward as a solution to the spatial mapping problem of light switches \cite{park2014previewable}. In their study, \citeauthor{park2014previewable} overlay switches with touch sensors. When a switch is touched, the corresponding lights dim, giving the user feedforward on which lights will turn on or off if they continue their action. In the accompanied user study, participants consistently toggle lights faster and more accurately using these previewable switches than when using conventional switches, and they feel ``less work demand, reduced sensory time, and more comfort and confidence on their action''.
-%
-%\begin{figure}
-%	\centering
-%	\includegraphics[width=0.6\linewidth]{img/park2014previewable/demo.png}
-%	\caption{Product breakdown structure diagram.}
-%	\label{fig:bps}
-%\end{figure}
-%
+	\subsection{AR Note-taking} \label{subsection_ar_note-taking}
+	\citeauthor{liu2011mobile} propose the use of mobile AR in note-taking \cite{liu2011mobile}. Looking through their PDA's, users can add annotations to the interfaces they aim at. These annotations later serve as feedforward when the users try to retrace their steps. The research team conducted no user study, but does mention challenges and opportunities, where the one concerning us in particular is how to convey rich annotations as clearly and efficiently as possible.
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/liu2011mobile/demo.png}
+		\caption{The user looks through their PDA at an interface that they've previously drawn annotations on \cite{liu2011mobile}}
+		\label{fig:liu2011mobile_demo}
+	\end{figure}
+	
+	\subsection{Previewable Switch} \label{subsection_previewable_switch}
+	The Previewable Switch presents feedforward as a solution to the spatial mapping problem of light switches \cite{park2014previewable}. When a switch is touched, the corresponding lights dim, giving the user feedforward on which lights will turn on or off if they continue their action (Fig. \ref{fig:park2014previewable_demo}). In the accompanied user study, participants consistently toggle lights faster and more accurately using these previewable switches than when using conventional switches, and they feel ``less work demand, reduced sensory time, and more comfort and confidence on their action''.
+
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{img/park2014previewable/demo.png}
+		\caption{The user holds touches a Previewable switch, which dims the corresponding light \cite{park2014previewable}}
+		\label{fig:park2014previewable_demo}
+	\end{figure}
+
 %\section{Scenarios} \label{section_scenarios}
 %Many scenarios can be imagined where AR improves user experience by constituting feedforward. We divide these scenarios up into two categories, namely `setups in dumb environments' and `setups in smart environments', and for both of them, we discuss their advantages and give some examples.
 %
