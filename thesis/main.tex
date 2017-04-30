@@ -5,23 +5,22 @@
 \usepackage[utf8]{inputenc} % Use UTF-8 input encoding.
 \usepackage[numbers]{natbib} % Enable the use of the 'citeauthor' command.
 \usepackage{parskip} % Add spacing between paragraphs and don't indent the first line.
+\usepackage{todonotes} % Enable TODO notes.
 
 \begin{document}
 	
 \section{Introduction} \label{sec:introduction}
-``The most profound technologies are those that disappear.'', Mark Weiser, Chief Technologist at Xerox PARC, famously wrote in his \textit{The Computer for the 21st Century} (\citeyear{weiser1991computer}) \cite{weiser1991computer}. Indeed, the vision of ubiquitous computing, or ubicomp, which he largely coined, is one where computers are invisible servants spread throughout the environment. They inform the user without requiring their attention, and controlling them is intuitive to the point where they feel like an extension of the user's unconsciousness rather than a tool \cite{weiser1997coming}. % explain ubicomp better, with some examples
+``The most profound technologies are those that disappear.'', Mark Weiser, Chief Technologist at Xerox PARC, famously wrote in his \textit{The Computer for the 21st Century} (\citeyear{weiser1991computer}) \cite{weiser1991computer}. Indeed, the vision of ubiquitous computing, or ubicomp, which he largely coined, is one where computers are invisible servants spread throughout the environment. They inform the user without requiring their attention, and controlling them is intuitive to the point where they feel like an extension of the user's unconsciousness rather than a tool \cite{weiser1997coming}. \todo{Explain ubicomp better, give some examples.}
 
 For decades, a big obstacle, if not \textit{the} biggest one, in making ubicomp a reality, has been hardware capabilities; low power consumption, solid wireless communication and excellent touchscreens are but some of the requirements for enabling the seamless human-computer interaction that Weiser and others envisioned \cite{weiser1993some}. In recent years, however, these hurdles are being rapidly overcome. The widespread adoption of smartphones, which boast all three of the aforementioned requirements, is perhaps the most striking evidence thereof.
 
 With hardware limitations diminishing, other ubicomp challenges become more prominent. Some current open research questions concern intelligibility, or how to make these systems easy to understand, and visibility, or how to make users aware of the presence of these systems \cite{vermeulen2009bet,vermeulen2013intelligibility}. There is some irony to the fact that, after decades of effort to make computer systems as small and discrete as possible to increase their usability, users now find themselves wondering where these systems are present and how to interact with them.
 
-The solution to the usability problems of ubicomp might, somewhat counterintuitively, be to hide the computer entirely. In virtual reality (VR) and augmented reality (AR), the computer becomes completely invisible by taking control of the user's sensory input, which at the same time allows it to convey information using any combination of visual, auditory and other signals \cite{rheingold1991virtual}. As such, \cite{weiser1993some}.
+The solution to the usability problems of ubicomp might, somewhat counterintuitively, be to hide the computer entirely. In virtual reality (VR) and augmented reality (AR), the computer becomes completely invisible by taking control of the user's sensory input, which at the same time allows it to communicate using any combination of visual, auditory and other signals \cite{rheingold1991virtual}. As such, the computer is able to convey information intuitively and with any degree of intrusiveness, making the approach excellent for implementing the ubicomp ideals \cite{weiser1993some}. \todo{Give some examples.}
 
-Another challenge in ubicomp concerns the fact that, while actions in virtual environments are often reversible, this is much less true in the real world.
+Another challenge in ubicomp is related to the fact that, while actions in virtual environments are often reversible, this is much less so in the real world. For this reason, it's essential to inform users as to what actions will achieve which effect, which is called feedforward \cite{djajadiningrat2002but}. While the notion of feedforward is both powerful and important, as of yet is has been moderately studied at best \cite{vermeulen2013crossing}. \todo{Explain feedforward better, give some examples.}
 
-Feedforward is ...
-
-In this thesis, we discuss the application of feedforward in AR to improve the usability of ubicomp systems. First we perform a 
+This thesis discusses the application of feedforward in AR to improve the usability of ubicomp systems. First we perform a literature review, in which we consider different views on feedforward, look at relevant interaction techniques suggested by other research teams, and analyze the results of past experiments on the topic. Then, we formulate a new set of hypotheses built on this existing work, which we evaluate in our own setups. We report the results, formulate a conclusion and suggest possible future work.
 
 %In 1988, when I started PARC’s work on ubiquitous computing, virtual reality (VR) came the closest to
 %enacting the principles we believed important. In its ultimate envisionment, VR causes the computer to
@@ -78,7 +77,10 @@ In this thesis, we discuss the application of feedforward in AR to improve the u
 %Preview important in the real world because it is often not possible to undo an action. \cite{rekimoto2003presense}
 
 \section{Related Work} \label{sec:related_work}
-Feedforward, AR and ubicomp are all recent topics of research, and literature combining the three is still scarce (but it does exist \cite{vermeulen2009bet}). However, there is a moderate set of works that combine at least two of the topics, or that bring forth some relevant technique. We divide the discussion of these works up into some general categories, to more easily make connections and to avoid repetition.
+Feedforward, AR and ubicomp are all recent topics of research, and literature combining the three is still scarce (but it does exist \cite{vermeulen2009bet}). However, there is a moderate set of works that combine at least two of the topics, or that bring forth some relevant technique. We divide the discussion of these works up into some general categories, to more easily make connections and to avoid repetition. \todo{Make some sections more in-depth, discuss earlier work, restructure, possibly add more related work.}
+
+	\subsection{Feedforward} \label{subsec:feedforward}
+	\textit{Discuss the different views on feedforward, as given by \citeauthor{djajadiningrat2002but} \cite{djajadiningrat2002but}, \citeauthor{wensveen2004interaction} \cite{wensveen2004interaction} and \citeauthor{vermeulen2013crossing} \cite{vermeulen2013crossing}. A good comparison has previously been made by \citeauthor{chueke2016perceptible} \cite{chueke2016perceptible}.}
 
 	\subsection{Gesture-based Commands} \label{subsec:gesture-based_commands}
 	OctoPocus explores the use of feedforward in on-screen gesture-based commands \cite{bau2008octopocus}. When the user initiates a command, for each possible gesture a labeled path radiates from the cursor, giving the user feedforward by telling them what will happen if they move the cursor in a particular way (Fig. \ref{fig:bau2008octopocus_demo}). The accompanying user study indicates that this approach allows for lower overhead in time than when using traditional help menus, that it is less error-prone, allows for ``in situ'' learning, and that it is generally preferred by users.
