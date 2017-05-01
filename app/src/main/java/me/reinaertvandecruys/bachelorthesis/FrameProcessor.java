@@ -19,10 +19,11 @@ class FrameProcessor {
     @NonNull
     Mat process(@NonNull CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat frame = inputFrame.rgba();
+        Mat gray = inputFrame.gray();
 
         process(mFrameProcessorAddress,
                 frame.getNativeObjAddr(),
-                inputFrame.gray().getNativeObjAddr());
+                gray.getNativeObjAddr());
 
         return frame;
     }

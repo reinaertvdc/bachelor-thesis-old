@@ -42,7 +42,7 @@ private:
                                            cv::Point2i(0, 0), cv::Point2i(0, 0)};
     };
 
-    static const int THRESHOLD = 40;
+    static const int THRESHOLD = 64;
     static const int THRESHOLD_MAX = 255;
 
     static const int NUM_PRIMARY_COLORS = 3;
@@ -54,16 +54,101 @@ private:
     static const int MIN_ARC_LENGTH = 400;
     static const int MAX_ARC_LENGTH = 2000;
 
+    static const int MIN_FINGER_TAG_ARC_LENGTH = 50;
+    static const int MAX_FINGER_TAG_ARC_LENGTH = 200;
+
     static constexpr double APPROX_CURVE_ACCURACY_FACTOR = 0.1;
 
     static const int NUM_TAG_POINTS = 4;
 
+    cv::Scalar SWITCH_COLOR = cv::Scalar(0, 255, 255);
+    cv::Scalar SWITCH_COLOR_ON = cv::Scalar(255, 255, 0);
+    cv::Scalar SWITCH_COLOR_ACTIVE = cv::Scalar(255, 0, 0);
+    cv::Scalar SWITCH_COLOR_PRESSED = cv::Scalar(255, 0, 255);
+
     cv::Mat *frame;
 
-    std::vector<cv::Point2i> panel = {cv::Point2i(0, 0), cv::Point2i(0, 0),
-                                      cv::Point2i(0, 0), cv::Point2i(0, 0)};
+    cv::Point2f transformSource[3] = {cv::Point2i(000, -10),
+                                      cv::Point2i(100, -10),
+                                      cv::Point2i(100, 110)};
+    cv::Point2f transformDest[3] = {cv::Point2i(), cv::Point2i(), cv::Point2i()};
+
+    cv::Mat transform;
+
+    std::vector<cv::Point2i> panel = {cv::Point2i(+00, +00), cv::Point2i(+10, +00),
+                                      cv::Point2i(+10, +40), cv::Point2i(+00, +40),
+
+                                      cv::Point2i(+10, +00), cv::Point2i(+20, +00),
+                                      cv::Point2i(+20, +40), cv::Point2i(+10, +40),
+
+                                      cv::Point2i(+20, +00), cv::Point2i(+30, +00),
+                                      cv::Point2i(+30, +40), cv::Point2i(+20, +40),
+
+                                      cv::Point2i(+30, +00), cv::Point2i(+40, +00),
+                                      cv::Point2i(+40, +40), cv::Point2i(+30, +40),
+
+
+                                      cv::Point2i(+50, +00), cv::Point2i(+60, +00),
+                                      cv::Point2i(+60, +40), cv::Point2i(+50, +40),
+
+                                      cv::Point2i(+60, +00), cv::Point2i(+70, +00),
+                                      cv::Point2i(+70, +40), cv::Point2i(+60, +40),
+
+
+                                      cv::Point2i(+80, +00), cv::Point2i(100, +00),
+                                      cv::Point2i(100, +40), cv::Point2i(+80, +40),
+
+
+                                      cv::Point2i(+00, +60), cv::Point2i(+20, +60),
+                                      cv::Point2i(+20, 100), cv::Point2i(+00, 100),
+
+
+                                      cv::Point2i(+30, +60), cv::Point2i(+50, +60),
+                                      cv::Point2i(+50, 100), cv::Point2i(+30, 100),
+
+                                      cv::Point2i(+50, +60), cv::Point2i(+70, +60),
+                                      cv::Point2i(+70, 100), cv::Point2i(+50, 100),
+
+
+                                      cv::Point2i(+80, +60), cv::Point2i(+90, +60),
+                                      cv::Point2i(+90, 100), cv::Point2i(+80, 100),
+
+                                      cv::Point2i(+90, +60), cv::Point2i(100, +60),
+                                      cv::Point2i(100, 100), cv::Point2i(+90, 100),
+    };
+    std::vector<cv::Point2i> panelProjected;
+
+    std::vector<cv::Point2i> switchTestPoints = {cv::Point2i(),
+                                                 cv::Point2i(),
+                                                 cv::Point2i(),
+                                                 cv::Point2i(),
+                                                 cv::Point2i()};
+
+    std::vector<bool> switchStates = {
+            false/**/, true/*/*/, false/**/, true/*/*/, /*------*/
+            false/**/, false/**/, /*------*/ false/*///////////*/,
+
+            false/*///////////*/, /*------*/ true/*////////////*/,
+            true/*////////////*/, /*------*/ false/**/, false/**/,
+    };
+
+    int activeSwitchIndex = -1;
+    int activeSwitchAge = 0;
+    static const int MAX_ACTIVE_SWITCH_AGE = 2;
+
+    int previousPressedSwitchIndex = -1;
+    bool switchIsPressed = false;
+    int switchPressedAge = 0;
+    static const int MAX_SWITCH_PRESSED_AGE = 2;
+
+    static const int MIN_PRESS_INTERVAL = 10;
+    int pressInterval = MIN_PRESS_INTERVAL;
+
+    const int NUM_SWITCHES = (int) (panel.size() / 4);
 
     bool panelIsSet = false;
+
+
 
     Tag tagBlue = Tag(*this, cv::Vec4b(255, 0, 0), true, true);
     Tag tagGreen = Tag(*this, cv::Vec4b(0, 255, 0), true, false);
@@ -85,8 +170,14 @@ private:
 
     static inline cv::Vec4b getMaximizedColor(const cv::Vec4b &color);
 
+    static inline cv::Point2i getClosestPoint(const std::vector<cv::Point2i> &points,
+                                              const cv::Point2i &point);
+
     static inline cv::Point2i getFurthestPoint(const std::vector<cv::Point2i> &points,
                                                const cv::Point2i &point);
+
+    static inline void getCenter(const cv::Point2i &point1, const cv::Point2i &point2,
+                                 cv::Point2i &result);
 };
 
 
