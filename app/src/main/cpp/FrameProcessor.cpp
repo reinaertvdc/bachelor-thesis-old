@@ -84,6 +84,8 @@ void FrameProcessor::process(cv::Mat &frame, cv::Mat &gray) {
 
     int panelPointIndex = 0;
     for (int switchIndex = 0; switchIndex < NUM_SWITCHES; switchIndex++) {
+        const cv::Scalar& drawColor = switchesToLight[switchIndex] >= 0 ?
+                                      SWITCH_COLOR : SWITCH_COLOR_DISABLED;
         getCenter(panelProjected[panelPointIndex], panelProjected[panelPointIndex + 2],
                   switchTestPoints[0]);
 
@@ -102,7 +104,7 @@ void FrameProcessor::process(cv::Mat &frame, cv::Mat &gray) {
 
                 switchIsPressed = false;
                 updated = true;
-            } else if (color.val[0] > 150 && color.val[1] < 100 && color.val[2] < 100) {
+            } else if (color.val[0] > 150 && color.val[1] < 80 && color.val[2] < 80) {
                 if (!updated) {
                     previousPressedSwitchIndex = activeSwitchIndex;
                     activeSwitchAge = 0;
@@ -112,7 +114,10 @@ void FrameProcessor::process(cv::Mat &frame, cv::Mat &gray) {
 
                 if (pressInterval >= MIN_PRESS_INTERVAL ||
                     previousPressedSwitchIndex != activeSwitchIndex) {
-                    switchStates[switchIndex] = !switchStates[switchIndex];
+                    if (switchesToLight[switchIndex] >= 0) {
+                        lightStates[switchesToLight[switchIndex]] =
+                                !lightStates[switchesToLight[switchIndex]];
+                    }
                 }
 
                 pressInterval = 0;
@@ -124,7 +129,7 @@ void FrameProcessor::process(cv::Mat &frame, cv::Mat &gray) {
             }
         }
 
-        if (!switchStates[switchIndex]) {
+        if (switchesToLight[switchIndex] < 0 || !lightStates[switchesToLight[switchIndex]]) {
             for (int i = 0; i < 4; i++) {
                 int nextPanelPointIndex = panelPointIndex + 1;
 
@@ -134,7 +139,7 @@ void FrameProcessor::process(cv::Mat &frame, cv::Mat &gray) {
 
                 cv::line(frame, panelProjected[panelPointIndex],
                          panelProjected[nextPanelPointIndex],
-                         SWITCH_COLOR, 8);
+                         drawColor, 8);
 
                 panelPointIndex++;
             }
@@ -149,7 +154,7 @@ void FrameProcessor::process(cv::Mat &frame, cv::Mat &gray) {
 
     panelPointIndex = 0;
     for (int switchIndex = 0; switchIndex < NUM_SWITCHES; switchIndex++) {
-        if (switchStates[switchIndex]) {
+        if (switchesToLight[switchIndex] >= 0 && lightStates[switchesToLight[switchIndex]]) {
             for (int i = 0; i < 4; i++) {
                 int nextPanelPointIndex = panelPointIndex + 1;
 
@@ -194,6 +199,100 @@ void FrameProcessor::process(cv::Mat &frame, cv::Mat &gray) {
 
             if (activeSwitchAge > MAX_ACTIVE_SWITCH_AGE) {
                 activeSwitchIndex = -1;
+            }
+        }
+    }
+
+    for (int wallIndex = 0; wallIndex < FLOOR_PLAN.size(); wallIndex++) {
+        for (int cornerIndex = 0; cornerIndex < FLOOR_PLAN[wallIndex].size() - 1; cornerIndex++) {
+            cv::line(
+                    frame,
+                    FLOOR_PLAN[wallIndex][cornerIndex],
+                    FLOOR_PLAN[wallIndex][cornerIndex + 1],
+                    cv::Scalar(0, 255, 255),
+                    8
+            );
+        }
+    }
+
+    int activeLightIndex = activeSwitchIndex >= 0 ? switchesToLight[activeSwitchIndex] : -1;
+    for (int lightIndex = 0; lightIndex < LIGHT_POINTS.size(); lightIndex++) {
+        cv::Scalar color = lightStates[lightIndex] ? SWITCH_COLOR_ON : cv::Scalar(127, 127, 127);
+
+        if (activeLightIndex == lightIndex) {
+            std::string lightName = "";
+
+            if (activeLightIndex == 0) {
+                lightName = "Living Room";
+            } else if (activeLightIndex == 1) {
+                lightName = "Bathroom";
+            } else if (activeLightIndex == 2) {
+                lightName = "Kitchen";
+            } else if (activeLightIndex == 3) {
+                lightName = "Bedroom";
+            }
+
+            if (!(lightName == displayedName)) {
+                displayedName = lightName;
+
+                /*mActivity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        mTextViewLightName.setText(mLightName);
+                    }
+                });*/
+            }
+        }
+
+        const cv::Vec4b &testColor = frame.at<cv::Vec4b>(LIGHT_POINTS[lightIndex]);
+        if (testColor.val[0] > 150 && testColor.val[1] > 150 && testColor.val[2] < 100) {
+            for (int switchIndex = 0; switchIndex < NUM_SWITCHES; switchIndex++) {
+                if (switchesToLight[switchIndex] == lightIndex) {
+                    for (int i = switchIndex * 4; i < switchIndex * 4 + 4; i++) {
+                        int nextPanelPointIndex = i + 1;
+
+                        if ((nextPanelPointIndex % 4) == 0) {
+                            nextPanelPointIndex -= 4;
+                        }
+
+                        cv::line(frame, panelProjected[i],
+                                 panelProjected[nextPanelPointIndex],
+                                 SWITCH_COLOR_ACTIVE, 2);
+                    }
+                }
+            }
+        }
+
+        cv::circle(
+                frame,
+                LIGHT_POINTS[lightIndex],
+                2,
+                color,
+                32
+        );
+    }
+
+    if (activeLightIndex >= 0) {
+        for (int switchIndex = 0; switchIndex < NUM_SWITCHES; switchIndex++) {
+            if (switchesToLight[switchIndex] == activeLightIndex) {
+                for (int i = switchIndex * 4; i < switchIndex * 4 + 4; i++) {
+                    int nextPanelPointIndex = i + 1;
+
+                    if ((nextPanelPointIndex % 4) == 0) {
+                        nextPanelPointIndex -= 4;
+                    }
+
+                    cv::line(frame, panelProjected[i],
+                             panelProjected[nextPanelPointIndex],
+                             SWITCH_COLOR_ACTIVE, 2);
+                }
+
+                cv::circle(
+                        frame,
+                        LIGHT_POINTS[activeLightIndex],
+                        28,
+                        SWITCH_COLOR_ACTIVE,
+                        8
+                );
             }
         }
     }
@@ -299,6 +398,20 @@ void FrameProcessor::getCenter(const cv::Point2i &point1, const cv::Point2i &poi
                                cv::Point2i &result) {
     result.x = std::min(point1.x, point2.x) + (std::abs(point1.x - point2.x) / 2);
     result.y = std::min(point1.y, point2.y) + (std::abs(point1.y - point2.y) / 2);
+}
+
+FrameProcessor::FrameProcessor() {
+    for (int wallIndex = 0; wallIndex < FLOOR_PLAN.size(); wallIndex++) {
+        for (int cornerIndex = 0; cornerIndex < FLOOR_PLAN[wallIndex].size(); cornerIndex++) {
+            FLOOR_PLAN[wallIndex][cornerIndex].x = (int)((FLOOR_PLAN[wallIndex][cornerIndex].x / 100.0) * FLOOR_SIZE.x + FLOOR_TOP_LEFT.x);
+            FLOOR_PLAN[wallIndex][cornerIndex].y = (int)((FLOOR_PLAN[wallIndex][cornerIndex].y / 100.0) * FLOOR_SIZE.y + FLOOR_TOP_LEFT.y);
+        }
+    }
+
+    for (int lightIndex = 0; lightIndex < LIGHT_POINTS.size(); lightIndex++) {
+        LIGHT_POINTS[lightIndex].x = (int)((LIGHT_POINTS[lightIndex].x / 100.0) * FLOOR_SIZE.x + FLOOR_TOP_LEFT.x);
+        LIGHT_POINTS[lightIndex].y = (int)((LIGHT_POINTS[lightIndex].y / 100.0) * FLOOR_SIZE.y + FLOOR_TOP_LEFT.y);
+    }
 }
 
 const cv::Vec4b &FrameProcessor::Tag::getColor() const {

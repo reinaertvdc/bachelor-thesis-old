@@ -8,6 +8,8 @@
 
 class FrameProcessor {
 public:
+    FrameProcessor();
+
     void process(cv::Mat &frame, cv::Mat &gray);
 
 private:
@@ -28,7 +30,7 @@ private:
         const std::vector<cv::Point2i> *getPoints() const;
 
     private:
-        static const int MAX_AGE = 4;
+        static const int MAX_AGE = 8;
 
         static const int DRAWING_THICKNESS = 8;
 
@@ -65,6 +67,7 @@ private:
     cv::Scalar SWITCH_COLOR_ON = cv::Scalar(255, 255, 0);
     cv::Scalar SWITCH_COLOR_ACTIVE = cv::Scalar(255, 0, 0);
     cv::Scalar SWITCH_COLOR_PRESSED = cv::Scalar(255, 0, 255);
+    cv::Scalar SWITCH_COLOR_DISABLED = cv::Scalar(0, 255, 255);
 
     cv::Mat *frame;
 
@@ -118,19 +121,55 @@ private:
     };
     std::vector<cv::Point2i> panelProjected;
 
+    std::vector<std::vector<cv::Point2i>> FLOOR_PLAN = {
+            {
+                    // outer walls
+                    cv::Point2i(+00, +00),
+                    cv::Point2i(100, +00),
+                    cv::Point2i(100, 100),
+                    cv::Point2i(+00, 100),
+                    cv::Point2i(+00, +00),
+            },
+            {
+                    // bedroom
+                    cv::Point2i(+20, +60),
+                    cv::Point2i(+40, +60),
+                    cv::Point2i(+40, 100)
+            },
+            {
+                    // bathroom
+                    cv::Point2i(+60, +60),
+                    cv::Point2i(100, +60)
+            }
+    };
+
+    std::vector<cv::Point2i> LIGHT_POINTS = {
+            cv::Point2i(+20, +30),
+            cv::Point2i(+70, +80),
+            cv::Point2i(+80, +30),
+            cv::Point2i(+20, +80)
+    };
+
+    std::vector<bool> lightStates = {
+            false,
+            false,
+            false,
+            false
+    };
+
     std::vector<cv::Point2i> switchTestPoints = {cv::Point2i(),
                                                  cv::Point2i(),
                                                  cv::Point2i(),
                                                  cv::Point2i(),
                                                  cv::Point2i()};
 
-    std::vector<bool> switchStates = {
-            false/**/, true/*/*/, false/**/, true/*/*/, /*------*/
-            false/**/, false/**/, /*------*/ false/*///////////*/,
-
-            false/*///////////*/, /*------*/ true/*////////////*/,
-            true/*////////////*/, /*------*/ false/**/, false/**/,
+    std::vector<int> switchesToLight = {
+            000, 001, 002, 003, /**/ 002, 001, /**/ 00000000,
+            00000002, /**/ 00000001, 00000000, /**/ 001, 003
     };
+
+    cv::Point2i FLOOR_TOP_LEFT = cv::Point2i(1570, 680);
+    cv::Point2i FLOOR_SIZE = cv::Point2i(300, 300);
 
     int activeSwitchIndex = -1;
     int activeSwitchAge = 0;
@@ -148,7 +187,7 @@ private:
 
     bool panelIsSet = false;
 
-
+    std::string displayedName = "";
 
     Tag tagBlue = Tag(*this, cv::Vec4b(255, 0, 0), true, true);
     Tag tagGreen = Tag(*this, cv::Vec4b(0, 255, 0), true, false);
